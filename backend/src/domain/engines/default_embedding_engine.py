@@ -50,9 +50,36 @@ class DefaultEmbeddingEngine:
             # 2. Extract texts to be embedded
             texts = [chunk.chunk_text for chunk in chunk_collection.chunks]
 
-            # 3. Request batch embeddings from the provider
-            logger.info("Chunk batch submitted")
-            batch_dto = self.provider.generate_embeddings(texts, model_name=self.model_name)
+            # 3. Request batch embeddings from the provider in sub-batches
+            max_batch_size = getattr(self.provider, "max_batch_size", 512)
+            all_vectors = []
+            total_processing_time = 0.0
+
+            from src.domain.providers.embedding import EmbeddingBatch
+
+            for i in range(0, len(texts), max_batch_size):
+                sub_batch_texts = texts[i : i + max_batch_size]
+                logger.info(
+                    f"Submitting embedding sub-batch {i // max_batch_size + 1} "
+                    f"(size: {len(sub_batch_texts)})"
+                )
+                sub_batch_dto = self.provider.generate_embeddings(
+                    sub_batch_texts, model_name=self.model_name
+                )
+
+                if not sub_batch_dto.vectors:
+                    logger.error("Generation failed: Provider returned empty/missing vectors")
+                    raise ValidationException("Provider returned empty or missing vectors.")
+
+                all_vectors.extend(sub_batch_dto.vectors)
+                total_processing_time += sub_batch_dto.processing_time
+
+            # Construct aggregated DTO
+            batch_dto = EmbeddingBatch(
+                vectors=all_vectors,
+                processing_time=total_processing_time,
+                model_identifier=self.model_name,
+            )
 
             # 4. Validate Provider DTO output
             # 4a. Missing vectors
