@@ -1,0 +1,24 @@
+[
+  {
+    "question": "What is CRC?",
+    "expected_answer": "Cyclic Redundancy Check is an error-detecting code used to detect accidental changes to raw data.",
+    "expected_pages": [45, 46],
+    "expected_chunks": ["chunk_crc_1", "chunk_crc_2"],
+    "expected_keywords": ["cyclic", "redundancy", "error", "detection"],
+    "expected_citations": ["Citation CRC"],
+    "difficulty": "medium",
+    "category": "Error Detection",
+    "book": "Computer Networks"
+  },
+  {
+    "question": "Explain Go-Back-N protocol",
+    "expected_answer": "Go-Back-N ARQ is a specific instance of the sliding window protocol where the sender continues to send packets without waiting for ack.",
+    "expected_pages": [80, 81, 82],
+    "expected_chunks": ["chunk_gbn_1"],
+    "expected_keywords": ["sliding", "window", "packets", "acknowledgement"],
+    "expected_citations": ["Citation GBN"],
+    "difficulty": "hard",
+    "category": "Data Link Layer",
+    "book": "Computer Networks"
+  }
+]

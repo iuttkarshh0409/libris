@@ -1,0 +1,50 @@
+# System / OS files
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+
+# Version Control
+.git/
+
+# Python virtual environment and caches
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+backend/.venv/
+backend/__pycache__/
+backend/.pytest_cache/
+backend/.mypy_cache/
+backend/.ruff_cache/
+
+# Node modules and build output
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+.eslintcache
+
+# Local databases and metadata directories
+backend/data/
+backend/db/
+data/
+db/
+*.db
+*.sqlite
+
+# Local configuration files (contains sensitive API keys)
+.env
+backend/.env
+frontend/.env
+*.local
+
+# PDF uploads and testing outputs
+backend/uploads/
+uploads/
+/computer_networks.pdf

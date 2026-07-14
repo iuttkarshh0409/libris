@@ -1,0 +1,18 @@
+{
+  "overall_score": 85.0,
+  "metrics_summary": {
+    "recall_at_k": 0.8,
+    "precision_at_k": 0.7,
+    "mrr": 0.75,
+    "citation_accuracy": 0.85,
+    "citation_coverage": 0.8,
+    "evidence_coverage_ratio": 0.6,
+    "prompt_size_chars": 2000,
+    "retrieval_latency_seconds": 0.15,
+    "generation_latency_seconds": 1.2,
+    "total_pipeline_latency_seconds": 1.4,
+    "response_length_chars": 500,
+    "chunk_count": 5,
+    "average_similarity": 0.75
+  }
+}
