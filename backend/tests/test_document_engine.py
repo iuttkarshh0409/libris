@@ -190,7 +190,33 @@ def test_document_engine_missing_page_text(tmp_path: Path) -> None:
     provider.extract_document.return_value = Success(extracted_doc)
 
     engine = DefaultDocumentEngine(document_provider=provider)
-    with pytest.raises(ValidationException, match="missing or empty text"):
+    parsed_doc = engine.parse_pdf(str(dummy_file))
+
+    # Should skip the blank page but successfully parse the valid page
+    assert len(parsed_doc.pages) == 1
+    assert parsed_doc.pages[0].page_number == 1
+    assert parsed_doc.pages[0].extracted_text == "Valid text"
+
+
+def test_document_engine_all_pages_empty(tmp_path: Path) -> None:
+    dummy_file = tmp_path / "all_empty_pages.pdf"
+    dummy_file.write_bytes(b"%PDF...")
+
+    provider = Mock()
+    extracted_doc = ExtractedDocument(
+        metadata={},
+        page_count=2,
+        pages=[
+            ExtractedPage(page_number=1, text="   "),
+            ExtractedPage(page_number=2, text=""),
+        ],
+    )
+    provider.extract_document.return_value = Success(extracted_doc)
+
+    engine = DefaultDocumentEngine(document_provider=provider)
+    with pytest.raises(
+        ValidationException, match="All document pages are empty or contain no text"
+    ):
         engine.parse_pdf(str(dummy_file))
 
 

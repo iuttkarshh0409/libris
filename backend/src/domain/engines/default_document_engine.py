@@ -80,10 +80,12 @@ class DefaultDocumentEngine:
                 raise ValidationException(f"Duplicate page number {ext_page.page_number} detected.")
             page_numbers.add(ext_page.page_number)
 
-            # Validate missing text
+            # Validate missing text (warn and ignore, don't crash)
             if ext_page.text is None or not ext_page.text.strip():
-                logger.error(f"Page {ext_page.page_number} has missing or empty text")
-                raise ValidationException(f"Page {ext_page.page_number} has missing or empty text.")
+                logger.warning(
+                    f"Ignoring page {ext_page.page_number}: it has missing or empty text."
+                )
+                continue
 
             page_id = PageId(str(uuid.uuid4()))
             page = Page(
@@ -94,6 +96,10 @@ class DefaultDocumentEngine:
                 character_count=len(ext_page.text),
             )
             pages.append(page)
+
+        if not pages:
+            logger.error("All document pages are empty or contain no text")
+            raise ValidationException("All document pages are empty or contain no text.")
 
         # Sort pages to ensure proper ordering
         pages.sort(key=lambda p: p.page_number)
